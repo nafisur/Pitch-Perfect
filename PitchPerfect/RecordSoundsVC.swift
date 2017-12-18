@@ -19,15 +19,13 @@ class RecordSoundsVC: UIViewController, AVAudioRecorderDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        recordStopButton.isEnabled = false
+        setupUI(recording: false)
         
     }
 
     @IBAction func recordButtonPressed(_ sender: Any) {
         
-        recordingLabel.text = "Recording in Progress"
-        recordButton.isEnabled = false
-        recordStopButton.isEnabled = true
+        setupUI(recording: true)
         let dirPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
         let recordingName = "recordedVoice.wav"
         let pathArray = [dirPath, recordingName]
@@ -46,14 +44,28 @@ class RecordSoundsVC: UIViewController, AVAudioRecorderDelegate {
     }
     @IBAction func stopRecordButtonPressed(_ sender: Any) {
         
-        recordButton.isEnabled = true
-        recordStopButton.isEnabled = false
-        recordingLabel.text = "Tap to Record"
+        setupUI(recording: false)
         audioRecorder.stop()
         let session = AVAudioSession.sharedInstance()
         try! session.setActive(false)
         
         
+    }
+    
+    func setupUI(recording : Bool) {
+        
+        if recording {
+            
+            recordingLabel.text = "Recording in Progress"
+            recordButton.isEnabled = false
+            recordStopButton.isEnabled = true
+        }
+        else {
+            
+            recordButton.isEnabled = true
+            recordStopButton.isEnabled = false
+            recordingLabel.text = "Tap to Record"
+        }
     }
     
     func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
@@ -63,7 +75,15 @@ class RecordSoundsVC: UIViewController, AVAudioRecorderDelegate {
         }
         else {
             
-            print("Recording was not successful")
+            let alert = UIAlertController(
+                title: "Audio Recorder Error",
+                message: "Saving your record was failed",
+                preferredStyle: .alert
+            )
+            
+            alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
+            
+            self.present(alert, animated: true, completion: nil)
         }
     }
     
