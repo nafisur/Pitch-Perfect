@@ -76,7 +76,7 @@ class RecordSoundsVC: UIViewController, AVAudioRecorderDelegate {
         else {
             
             let alert = UIAlertController(
-                title: "Audio Recorder Error",
+                title: "Error",
                 message: "Saving your record was failed",
                 preferredStyle: .alert
             )
